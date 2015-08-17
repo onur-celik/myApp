@@ -1,0 +1,95 @@
+<ion-view view-title="Welcome">
+  <ion-content class="padding">
+    <div class="list card">
+      <div class="item item-divider">{{'Please fill the form'}}</div>
+      <div class="item item-body">
+        <div>
+          <!-- NAVIGASYON BUTONLARI -->
+          <a ng-show="register_mode != 'login' && register_mode" ng-click="register_mode='login'" class="button button-small">
+            < {{'Back to login page'}}
+          </a>
+
+          <a ng-click="register_mode='sign_up_sms'" class="button button-small" ng-show="register_mode != 'sign_up_sms'">
+            {{'Get sms to signup'}}
+          </a>
+
+          <!-- NAVIGASYON BUTONLARI / END-->
+
+
+          <!-- NG INIT KULLANILDI... -->
+          <!---------------sign_up_sms ---------!-->
+          <!--<div class="list" ng-init="register_mode = 'sms_verify'">-->
+          <div class="list">
+            <form ng-submit="sendSms()" name="sms_form" ng-show="register_mode=='sign_up_sms'" novalidate>
+              <label class="item item-input item-stacked-label">
+                <span class="input-label">GSM Number :</span>
+                <input type="text" ng-model="form.gsm" placeholder='{{"Gsm:905053093636"}}' required>
+              </label>
+
+              <div class="list list-inset" ng-show="lastResponse">
+
+                <div class="item">
+                  {{lastResponse}}
+                </div>
+              </div>
+
+              <button class="button button-block button-positive" type="submit" ng-disabled="sms_form.$invalid">
+                {{'Send'}}
+              </button>
+            </form>
+          </div>
+          <!---------------sign_up_sms END---------!-->
+
+          <!---------------login_form ---------!-->
+          <div class="list" ng-show="register_mode=='login' || !register_mode">
+            <form name="login_form" ng-submit="login();">
+              <label class="item item-input item-stacked-label">
+                <span class="input-label">{{'Username :'}}</span>
+                <input type="text" nng-model="form.gsm" placeholder="{{'User Name'}}">
+              </label>
+
+              <label class="item item-input item-stacked-label">
+                <span class="input-label">{{'Password :'}}</span>
+                <input type="password" ng-model="form.password" placeholder="{{'Password'}}" required>
+              </label>
+
+              <div class="list list-inset" ng-show="lastResponse">
+                <div class="item">
+                  {{lastResponse}}
+                </div>
+              </div>
+
+              <button class="button button-block button-positive" type="submit" ng-disabled="login_form.$invalid || is_submit">
+                {{'Login'}}
+              </button>
+            </form>
+          </div>
+          <!---------------login_form END---------!-->
+
+
+          <!--------------- sms verify---------!-->
+          <form name="verification_form" ng-show="register_mode=='sms_verify'" ng-submit="verifySms()" novalidate>
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">{{'Verification Code :'}}</span>
+              <input type="text" ng-model="form.password" placeholder="{{'Verification Code'}}" required>
+            </label>
+            <button class="button button-block button-positive" type="submit" ng-disabled="verification_form.$invalid">
+              {{'Verify Code'}}
+            </button>
+          </form>
+          <!--------------- sms verify---------!-->
+
+          <a ng-click="getLastConnectionInfo();" class="button button-positive button-block">
+            {{'Get Last Connection Info'}}
+          </a>
+
+          <pre>
+              {{resp}}
+          </pre>
+
+
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
