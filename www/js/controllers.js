@@ -11,11 +11,13 @@ angular.module('starter.controllers', [])
     //  $scope.is_submit = false;
     //});
 
-    $scope.resp = {
-      "connected_before": true,
-      "data": "{\"client\": {\"ip\": \"192.168.20.224\", \"mac\": \"CC:52:AF:11:09:0B\", \"requested_url\": \"http://www.google.com.tr\", \"logged-in\": \"no\"}, \"edge\": {\"hostname\": \"ns1.google.com\", \"login_url\": \"http://ns1.google.com/login\", \"ssl-login\": \"no\", \"current_url\": \"http://ns1.google.com/login?dst=http%3A%2F%2Fwww.milliyet.com%2F\", \"chap-id\": \"\", \"plain-passwd\": \"yes\", \"current_host\": \"ns1.google.com\", \"essid\": \"Logsign20\", \"chap-challenge\": \"\", \"current_port\": \"80\"}, \"portal\": {\"url\": \"http://10.0.4.39\"}, \"integration\": \"Microtik\", \"error\": {\"message\": \"\"}}",
-      "id": "IB28J6GM0QRE"
-    };
+    //$scope.resp = {
+    //  "connected_before": true,
+    //  "data": "{\"client\": {\"ip\": \"192.168.20.224\", \"mac\": \"CC:52:AF:11:09:0B\", \"requested_url\": \"http://www.google.com.tr\", \"logged-in\": \"no\"}, \"edge\": {\"hostname\": \"ns1.google.com\", \"login_url\": \"http://ns1.google.com/login\", \"ssl-login\": \"no\", \"current_url\": \"http://ns1.google.com/login?dst=http%3A%2F%2Fwww.milliyet.com%2F\", \"chap-id\": \"\", \"plain-passwd\": \"yes\", \"current_host\": \"ns1.google.com\", \"essid\": \"Logsign20\", \"chap-challenge\": \"\", \"current_port\": \"80\"}, \"portal\": {\"url\": \"http://10.0.4.39\"}, \"integration\": \"Microtik\", \"error\": {\"message\": \"\"}}",
+    //  "id": "IB28J6GM0QRE"
+    //};
+
+    $scope.resp = {'connected_before':true};
 
     $scope.is_submit = false;
   }
@@ -37,14 +39,18 @@ angular.module('starter.controllers', [])
   }
 
   $scope.login = function (){
-    $http.jsonp('http://' +$scope.test_host+ '/api/portal/mobil/login/' + $scope.sessionid + '/' + $scope.adv_id + '/' + $scope.form.gsm + '/' + $scope.form.password + '/'+'?callback=JSON_CALLBACK').success(function(resp){
-      $scope.resp =  resp;
-      setTimeout(function(){
-        $http.jsonp(resp.login_url).success(function(response){
-          console.log('response',response)
-        });
-      }, 3000)
-    });
+    //$http.jsonp('http://' +$scope.test_host+ '/api/portal/mobil/login/' + $scope.sessionid + '/' + $scope.adv_id + '/' + $scope.form.gsm + '/' + $scope.form.password + '/'+'?callback=JSON_CALLBACK').success(function(resp){
+    //  $scope.resp =  resp;
+    $scope.resp = {'success':true,'message':'success|error message', sessionid:'abc'};
+    console.log('response-1 : ',$scope.resp);
+    //  setTimeout(function(){
+    //    $http.jsonp(resp.login_url).success(function(response){
+    //      response = {'success':true,'message':'success|error message', sessionid:'abc'};
+    var response = {"success":true,"login_url":"http://Gw/login?username=user&.."};
+    console.log('response-2 : ',response);
+    //    });
+    //  }, 3000)
+    //});
   }
 
   $scope.verifySms = function (){
