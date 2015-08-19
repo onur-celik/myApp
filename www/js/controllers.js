@@ -4,6 +4,20 @@ angular.module('starter.controllers', [])
   $scope.sessionid = $stateParams.session_id;
   $scope.adv_id = '9999';
 
+  $scope.initApp = function(){
+    $http
+        .get('/js/api/getSessionId.json')
+        .success(function(resp)
+        {
+          $scope.sessionId = resp;
+        })
+        .then(function(){
+          console.log($scope.sessionId);
+        });
+  };
+
+  $scope.initApp();
+
   $scope.getLastConnectionInfo = function(){
     $scope.is_submit = true;
     //$http.jsonp('http://' +$scope.test_host+ '/api/portal/mobil/last_connection_info/'+$scope.sessionid+ '/' + $scope.adv_id+'?callback=JSON_CALLBACK').success(function(resp){
@@ -17,9 +31,24 @@ angular.module('starter.controllers', [])
     //  "id": "IB28J6GM0QRE"
     //};
 
-    $scope.resp = {'connected_before':true};
 
-    $scope.is_submit = false;
+
+    ///////////////////////////////////////////////////////////////
+    // url'e $scope.sessionId.sessionid eklenecek...
+    $http
+        .get('/js/api/lastConnectionFail.json')
+        .success(function(resp)
+        {
+          $scope.connectedBefore = resp;
+        })
+        .then(function(){
+          console.log($scope.connectedBefore);
+          if ($scope.connectedBefore.connected_before == false)
+          {
+            $scope.register_mode="sign_up_sms";
+          }
+        });
+
   }
 
   //$http.get('/api/portal/mobil/test_host/'+$scope.sessionid).success(function(resp){
@@ -28,14 +57,48 @@ angular.module('starter.controllers', [])
 
 
   $scope.sendSms = function (){
-    $scope.is_submit = true;
-    $http.jsonp('http://' +$scope.test_host+ '/api/portal/mobil/send_sms/' + $scope.sessionid + '/' + $scope.adv_id + '/' + $scope.form.gsm + '/'+'?callback=JSON_CALLBACK').success(function(resp){
-      $scope.resp =  resp;
-      if (resp.sms_verify){
-        $scope.register_mode = 'sms_verify'
-      }
-      $scope.is_submit = false;
-    });
+    //$scope.is_submit = true;
+    //$http.jsonp('http://' +$scope.test_host+ '/api/portal/mobil/send_sms/' + $scope.sessionid + '/' + $scope.adv_id + '/' + $scope.form.gsm + '/'+'?callback=JSON_CALLBACK').success(function(resp){
+    //  $scope.resp =  resp;
+    //  if (resp.sms_verify){
+    //    $scope.register_mode = 'sms_verify'
+    //  }
+    //  $scope.is_submit = false;
+    //});
+
+
+
+    ////////////////////////////////////////////////////////////////
+    $http
+        .get('/js/api/signUp.json')
+        .success(function(resp)
+        {
+          $scope.signUp = resp;
+        })
+        .then(function(){
+          if($scope.signUp.success){
+            console.log($scope.signUp.message);
+            $scope.enableInternet();
+          }
+        });
+  }
+
+  $scope.enableInternet = function(){
+    $http
+        .get('/js/api/enableInternetSuccess.json')
+        .success(function(resp)
+        {
+          $scope.enableInternet = resp;
+        })
+        .then(function(){
+          if($scope.enableInternet.success){
+            console.log($scope.enableInternet.login_url);
+          }
+          else
+          {
+            console.log($scope.enableInternet.message);
+          }
+        });
   }
 
   $scope.login = function (){
@@ -52,6 +115,8 @@ angular.module('starter.controllers', [])
     //  }, 3000)
     //});
   }
+
+
 
   $scope.verifySms = function (){
     $scope.is_submit = true;

@@ -1,0 +1,12 @@
+{
+  "success" : true,
+  "message" : "success message"
+}
+
+/************************************************
+  OR
+{
+  "success" : false,
+  "message" : "error message"
+}
+************************************************/
