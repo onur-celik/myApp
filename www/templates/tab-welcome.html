@@ -37,24 +37,26 @@
 
 
           <!--------------- sms verify---------!-->
-          <form name="verification_form" ng-show="register_mode == 'sms_verify'" ng-submit="verifySms()" novalidate>
+          <form name="login_form" ng-show="register_mode == 'login'" ng-submit="login()" novalidate>
+              <label class="item item-input item-stacked-label">
+                  <span class="input-label">{{'Username :'}}</span>
+                  <input type="text" ng-model="form.username"  required>
+              </label>
+              
             <label class="item item-input item-stacked-label">
-              <span class="input-label">{{'Verification Code :'}}</span>
-              <input type="text" ng-model="form.password" placeholder="{{'Verification Code'}}" required>
+              <span class="input-label">{{'Password :'}}</span>
+              <input type="password" ng-model="form.password"  required>
             </label>
-            <button class="button button-block button-positive" type="submit" ng-disabled="verification_form.$invalid">
-              {{'Verify Code'}}
+            <button class="button button-block button-positive" type="submit" ng-disabled="login_form.$invalid">
+              {{'Login'}}
             </button>
           </form>
           <!--------------- sms verify---------!-->
 
-          <a ng-click="enable_internet();" class="button button-positive button-block" ng-show="register_mode=='enable_internet'">
-            {{'Enable Internet'}}
+          <a ng-click="register_mode = 'login'" class="button button-positive button-block" ng-show="register_mode != 'login' && register_mode">
+              {{'Back to login page'}}
           </a>
 
-          <a ng-click="getLastConnectionInfo();" class="button button-positive button-block">
-            {{'Get Last Connection Info'}}
-          </a>
 
           <pre>
               {{resp}}

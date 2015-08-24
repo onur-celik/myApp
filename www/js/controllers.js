@@ -1,46 +1,36 @@
 angular.module('starter.controllers', [])
 
 .controller('WelcomeCtrl', function ($scope, $http, $filter, $stateParams) {
-//        $scope.sessionid = $stateParams.sessionid;
         $scope.sessionid = 'null';
         $scope.trackId = '9999';
-        $scope.host = '10.0.4.39'
-        $scope.form = {}
-        $scope.register_mode = 'sign_up_sms'
-
-        $scope.getLastConnectionInfo = function(){
-            $scope.is_submit = true;
-            $http.get('http://' +$scope.host+ '/api/portal/auth/v1/last_connection_info?sessionid='+$scope.sessionid).success(function(resp){
-                $scope.resp =  resp;
-                $scope.is_submit = false;
-                if (resp.connected_before){
-                    $scope.register_mode = 'enable_internet';
-                }
-            });
+        $scope.form= {
+            'username':''
         }
-//        $http.get('/api/portal/auth/v1/test_host').success(function(resp){
-//            $scope.host = resp.test_host;
-//            $scope.start_session({'trackId':$scope.trackId})
-//        });
+        $scope.host = '10.0.4.39';
+
+        $http.get('http://' +$scope.host+ '/api/portal/auth/v1/test_host').success(function(resp){
+            $scope.host = resp.test_host;
+            $scope.start_session({'trackId':$scope.trackId})
+        });
 
 
         $scope.start_session = function(params) {
-            var req = {
-                method: 'POST',
-                url: 'http://' +$scope.host+ '/api/portal/auth/v1/start_session?sessionid='+$scope.sessionid,
+            $http.post('http://' +$scope.host+ '/api/portal/auth/v1/start_session?sessionid='+$scope.sessionid, params,{
                 headers: {
                     'Content-Type': undefined //cross browser post allowed
-                },
-                data: params
-            }
-
-            $http(req).success(function(resp){
+                }
+            }).success(function(resp){
                 if (resp.success){
                     $scope.sessionid = resp.sessionid;
-                    $scope.getLastConnectionInfo();
+                    if (resp.connected_before){
+                        $scope.register_mode = 'login';
+                        $scope.form.username = resp.username
+                    }else{
+                        $scope.register_mode = 'sign_up_sms';
+                    }
                 }
                 $scope.resp =  resp;
-            });
+            })
         }
 
 
@@ -48,7 +38,8 @@ angular.module('starter.controllers', [])
             $scope.is_submit = true;
             var params = {
                 'gsm':$scope.form.gsm,
-                'country_code': '90'
+                'country_code': '90',
+                'register_type': 'sms'
             }
             $http.post('http://' +$scope.host+ '/api/portal/auth/v1/sign_up?sessionid='+$scope.sessionid, params,{
                 headers: {
@@ -56,39 +47,21 @@ angular.module('starter.controllers', [])
                 }
             }).success(function(resp){
                 $scope.resp =  resp;
-                console.log(resp);
                 if (resp.success){
-                    $scope.register_mode='sms_verify'
+                    $scope.register_mode = 'login';
+                    $scope.form.username =  params.country_code + $scope.form.gsm
                 }
                 $scope.is_submit = false;
             });
         }
-        $scope.enable_internet = function (){
-            $http.get('http://' +$scope.host+ '/api/portal/auth/v1/enable_internet?sessionid='+$scope.sessionid).success(function(resp){
-                $scope.resp =  resp;
-                if (resp.success){
-                setTimeout(function(){
-                    $http.jsonp(resp.login_url).success(function(response){
-                        console.log('response',response)
-//                    message:loggedin varsa internet success
-                    });
-                }, 3000)
 
-                }
-//                setTimeout(function(){
-//                    $http.jsonp(resp.login_url).success(function(response){
-//                        console.log('response',response)
-////                    message:loggedin varsa internet success
-//                    });
-//                }, 3000)
-            });
-        }
-        $scope.verifySms = function (){
+        $scope.login = function (){
             $scope.is_submit = true;
             var params = {
-                'code' : $scope.form.password
+                'password' : $scope.form.password,
+                'username' : $scope.form.username
             }
-            $http.post('http://' +$scope.host+ '/api/portal/auth/v1/sms_verify?sessionid='+$scope.sessionid, params,{
+            $http.post('http://' +$scope.host+ '/api/portal/auth/v1/login?sessionid='+$scope.sessionid, params,{
                 headers: {
                     'Content-Type': undefined //cross browser post allowed
                 }
@@ -97,10 +70,15 @@ angular.module('starter.controllers', [])
                 $scope.is_submit = false;
                 if (resp.success){
                     $scope.register_mode = 'enable_internet';
+                    setTimeout(function(){
+                        $http.jsonp(resp.login_url).success(function(response){
+                            console.log('response',response)
+//                    message:loggedin varsa internet success
+                        });
+                    }, 3000)
                 }
             });
         }
 
-        $scope.start_session({'trackId':$scope.trackId})
 
-});
+    });
