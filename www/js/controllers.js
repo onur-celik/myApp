@@ -1,19 +1,17 @@
 angular.module('starter.controllers', [])
 
 .controller('WelcomeCtrl', function ($scope, $http, $filter, $stateParams) {
-
         if ($stateParams.sessionid){
-            console.log('-----session bulundu-----')
             $scope.sessionid = $stateParams.sessionid;
         }else{
             $scope.sessionid = 'null';
         }
 
         $scope.trackId = '9999';
+        $scope.host = '10.0.4.39';
         $scope.form= {
             'username':''
         }
-        $scope.host = '10.0.4.39';
 
         $http.get('http://' +$scope.host+ '/api/portal/auth/v1/test_host').success(function(resp){
             $scope.host = resp.test_host;
