@@ -1,7 +1,14 @@
 angular.module('starter.controllers', [])
 
 .controller('WelcomeCtrl', function ($scope, $http, $filter, $stateParams) {
-        $scope.sessionid = 'null';
+
+        if ($stateParams.sessionid){
+            console.log('-----session bulundu-----')
+            $scope.sessionid = $stateParams.sessionid;
+        }else{
+            $scope.sessionid = 'null';
+        }
+
         $scope.trackId = '9999';
         $scope.form= {
             'username':''
