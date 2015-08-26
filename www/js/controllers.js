@@ -76,7 +76,7 @@ angular.module('starter.controllers', [])
                 if (resp.success){
                     $scope.register_mode = 'enable_internet';
                     setTimeout(function(){
-                        $http.jsonp(resp.login_url).success(function(response){
+                        $http.jsonp(resp.login_url+'&callback=JSON_CALLBACK').success(function(response){
                             console.log('response',response)
 //                    message:loggedin varsa internet success
                         });
