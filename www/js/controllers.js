@@ -8,15 +8,11 @@ angular.module('starter.controllers', [])
         }
 
         $scope.trackId = '9999';
-        $scope.host = '10.0.4.39';
+        $scope.host = '10.0.4.40';
         $scope.form= {
             'username':''
         }
 
-        $http.get('http://' +$scope.host+ '/api/portal/auth/v1/test_host').success(function(resp){
-            $scope.host = resp.test_host;
-            $scope.start_session({'trackId':$scope.trackId})
-        });
 
 
         $scope.start_session = function(params) {
@@ -84,6 +80,8 @@ angular.module('starter.controllers', [])
                 }
             });
         }
+
+        $scope.start_session({'trackId':$scope.trackId})
 
 
     });
